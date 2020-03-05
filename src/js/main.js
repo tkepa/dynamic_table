@@ -18,25 +18,18 @@ if ('serviceWorker' in navigator) {
 const tableBody = document.querySelector(".table__body--js");
 let todayDate = new Date();
 let lastMonthDate = newDate(todayDate);
-const jakis = [];
 
 
-function totalIncome(incomes) {
-  let total = incomes.map(obj => {
-    return parseFloat(obj.value)
-  })
-  total = total.reduce( (a,b) => a + b);
-  
-  return total;
-};
+const totalIncome = (incomes) => incomes.reduce((acc,income) => acc + income);
 
+//this function return year-month date(getYearAndMonth)
 function newDate(todayDate) {
   todayDate.setDate(1);
-  todayDate.setMonth(todayDate.getMonth() - 3);
+  todayDate.setMonth(todayDate.getMonth() - 1);
   return new Date(todayDate).toISOString().slice(0,7);
 }
 
-function lastMonthIncomes(incomes) {
+function lastMonthIncomeDate(incomes) {
   let lastMonth = incomes.filter(income => {
     const incomeDate = income.date.slice(0,7);
     if (incomeDate === lastMonthDate) {
@@ -46,71 +39,75 @@ function lastMonthIncomes(incomes) {
       return false;
     }
   })
+  return lastMonth;
+};
+
+function lastMonthIncomes(incomes) {
+  let lastMonth = lastMonthIncomeDate(incomes);
   lastMonth = lastMonth.map(el => el.value);
-  lastMonth = lastMonth.reduce((a, b) => {
-    return parseFloat(a) + parseFloat(b);
-  })
+  if (lastMonth.length > 0) {
+    lastMonth = lastMonth.reduce((a, b) => {
+      return parseFloat(a) + parseFloat(b)
+    })
+  } 
+  else {
+    lastMonth = 0;
+  }
   return lastMonth;
 }
 
 
-async function Companies() {
-  let company = await fetch("https://recruitment.hal.skygate.io/companies");
-  company = await company.json();
-  const companyObj = [];
-  company.map(async comp => {
-    const ID = comp.id;
-    let incomes = await fetch(`https://recruitment.hal.skygate.io/incomes/${ID}`);
-    incomes = await incomes.json();
-    incomes = incomes.incomes;
-    const asd = incomes.map(a => parseFloat(a.value));
-    companyObj.push(asd);
-    //incomes = incomes.reduce((a,b) => {
-    //  return (a + b);
-    //})
+async function companny (comp, companiesArray) {
+  let companyIncomes = await fetch(`https://recruitment.hal.skygate.io/incomes/${comp.id}`);
+  companyIncomes = await companyIncomes.json();
+  companyIncomes = companyIncomes.incomes;
+  const companyIncome = companyIncomes.map(comp => parseFloat(comp.value));
 
-    
-    // incomes
-    const total = "" + Number(totalIncome(incomes)).toFixed(2);
-    const average = "" + Number(total/(incomes.length + 1)).toFixed(2);
-    const lastMonthIncome = "" + Number(lastMonthIncomes(incomes)).toFixed(2);
+  const total = "" + Number(totalIncome(companyIncome)).toFixed(2);
+  const average = "" + Number(total/(companyIncome.length + 1)).toFixed(2);
+  const monthIncome = "" + Number(lastMonthIncomes(companyIncomes)).toFixed(2);
 
-    
-    /*
-    if (lastMonthIncome) {
-      companyObj.push({...comp, "totalIncome" : total, "AverageIncome" : average, "LastMonthIncome" : lastMonthIncome});
-    }
-    else if (average) {
-      companyObj.push({...comp, "totalIncome" : 0, "AverageIncome" : 0, "LastMonthIncome" : 0});
-    }
-    else {
-      companyObj.push({...comp, "totalIncome" : 0, "AverageIncome" : 0, "LastMonthIncome" : 0});
-    }
-    */
-    
-  });
-  
- 
+  const companyObj = {...comp, "totalIncome" : total, "averageIncome" : average, monthIncome};
 
-  console.log(companyObj);
-  
-  for (const obj of companyObj) {
-    console.log(obj);
-    //const (a, b, c, d, e, f) = comp;
-    tableBody.innerHTML += `
-      <tr>
-        <td>${ID}<td>
-        <td>${name}<td>
-        <td>${city}<td>
-        <td>${total}<td>
-        <td>${average}<td>
-        <td>${income}<td>
-      </tr>
-    `
-  }
+  companiesArray.push(companyObj);
 }
 
-Companies();
+async function companies() {
+  let company = await fetch("https://recruitment.hal.skygate.io/companies");
+  company = await company.json();
+  const companiesArray = [];
+  
+  await Promise.all(company.map(comp => {
+    return companny(comp, companiesArray);
+  }));
 
+  
+  
+  return companiesArray;
+  
+  
+ 
+}
+
+const companiesList = companies();
+//companiesList.then(comp => console.log(comp));
+
+companiesList.then(comp => {
+  const company = comp;
+  for (const obj of company) {
+    const {id, name, city, totalIncome, averageIncome, monthIncome} = obj;
+  tableBody.innerHTML += `
+     <tr>
+        <td>${id}</td>
+        <td>${name}</td>
+        <td>${city}</td>
+        <td>${totalIncome}</td>
+        <td>${averageIncome}</td>
+        <td>${monthIncome}</td>
+      </tr>
+    `;
+    
+  }
+})
 
 
