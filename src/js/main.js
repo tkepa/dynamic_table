@@ -67,12 +67,17 @@ async function companny (comp, companiesArray) {
   const average = "" + Number(total/(companyIncome.length + 1)).toFixed(2);
   const monthIncome = "" + Number(lastMonthIncomes(companyIncomes)).toFixed(2);
 
-  const companyObj = {...comp, "totalIncome" : total, "averageIncome" : average, monthIncome};
+  const companyObj = {
+    ...comp, 
+    "totalIncome" : total, 
+    "averageIncome" : average, 
+    monthIncome
+  };
 
   companiesArray.push(companyObj);
 }
 
-async function companies() {
+async function getCompaniesList() {
   let company = await fetch("https://recruitment.hal.skygate.io/companies");
   company = await company.json();
   const companiesArray = [];
@@ -89,25 +94,74 @@ async function companies() {
  
 }
 
-const companiesList = companies();
-//companiesList.then(comp => console.log(comp));
+async function renderTable() {
+  const companiesList = await getCompaniesList();
+  let tableInnerHtml = "";
 
-companiesList.then(comp => {
-  const company = comp;
-  for (const obj of company) {
-    const {id, name, city, totalIncome, averageIncome, monthIncome} = obj;
-  tableBody.innerHTML += `
-     <tr>
-        <td>${id}</td>
-        <td>${name}</td>
-        <td>${city}</td>
-        <td>${totalIncome}</td>
-        <td>${averageIncome}</td>
-        <td>${monthIncome}</td>
-      </tr>
-    `;
-    
+  for (const company of companiesList) {
+    const {id, name, city, totalIncome, averageIncome, monthIncome} = company;
+    tableInnerHtml += `
+       <tr>
+          <td>${id}</td>
+          <td>${name}</td>
+          <td>${city}</td>
+          <td>${totalIncome}</td>
+          <td>${averageIncome}</td>
+          <td>${monthIncome}</td>
+        </tr>
+      `;
   }
-})
+
+  tableBody.innerHTML = tableInnerHtml;
+
+}
 
 
+
+
+//TESTING FEW SOLUTION OF PAGINATION
+
+/*
+headers.forEach(header => {
+  header.addEventListener('click', (() => {
+    const table = th.closest('table');
+    Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+        .forEach(tr => table.appendChild(tr) );
+})});
+*/
+renderTable().then(() => {
+  const headers = document.querySelectorAll(".header");
+  let table = document.querySelectorAll("tr");
+  
+ /* 
+  headers.forEach(header => {
+    header.addEventListener('click', (() => {
+      Array.from(table))
+          .sort(comparer(table, this.asc = !this.asc))
+          .forEach(tr => table.appendChild(tr) );
+  })});
+  */
+}
+)
+/*
+function sortTable(table, col, reverse) {
+  var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+      tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
+      i;
+  reverse = -((+reverse) || -1);
+  tr = tr.sort(function (a, b) { // sort rows
+      return reverse // `-1 *` if want opposite order
+          * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
+              .localeCompare(b.cells[col].textContent.trim())
+             );
+  });
+  for(i = 0; i < tr.length; ++i) tb.appendChild(tr[i]);
+
+const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+
+const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
+    v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+    */
