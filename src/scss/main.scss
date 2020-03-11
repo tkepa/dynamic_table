@@ -14,6 +14,10 @@ html {
 body {
   color: #000;
   background: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .table {
@@ -24,4 +28,14 @@ td, th {
   border: 1px solid #999;
   padding: 0.5rem;
   text-align: left;
+}
+
+.input__container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.input__field, .input__label {
+  margin: 0.5rem;
 }

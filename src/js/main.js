@@ -120,48 +120,33 @@ async function renderTable() {
 
 
 //TESTING FEW SOLUTION OF PAGINATION
+//getCellValue compare innerText and textContent if the table row is empty then it's pull data form textContent
+const getCellValue = (tableRow, columnIndex) => (tableRow.children[columnIndex].innerText || tableRow.children[columnIndex].textContent);
 
-/*
-headers.forEach(header => {
-  header.addEventListener('click', (() => {
-    const table = th.closest('table');
-    Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
-        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
-        .forEach(tr => table.appendChild(tr) );
-})});
-*/
-renderTable().then(() => {
-  const headers = document.querySelectorAll(".header");
-  let table = document.querySelectorAll("tr");
-  
- /* 
-  headers.forEach(header => {
-    header.addEventListener('click', (() => {
-      Array.from(table))
-          .sort(comparer(table, this.asc = !this.asc))
-          .forEach(tr => table.appendChild(tr) );
-  })});
-  */
-}
-)
-/*
-function sortTable(table, col, reverse) {
-  var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
-      tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
-      i;
-  reverse = -((+reverse) || -1);
-  tr = tr.sort(function (a, b) { // sort rows
-      return reverse // `-1 *` if want opposite order
-          * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
-              .localeCompare(b.cells[col].textContent.trim())
-             );
-  });
-  for(i = 0; i < tr.length; ++i) tb.appendChild(tr[i]);
+const comparer = (columnIndex, sortAscending) => (a, b) => {
+  const v1 = getCellValue(sortAscending ? a : b, columnIndex);
+  const v2 = getCellValue(sortAscending ? b : a, columnIndex);
+  if (v1 === "" || v2 === "" || isNaN(v1) || isNaN(v2)) {
+    return v1.toString().localeCompare(v2);
+  }
+  return v1 - v2;
+};
 
-const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+renderTable().then( () => {
+  const headers = Array.from(document.querySelectorAll(".header"));
+  let tableQuery = Array.from(document.querySelectorAll(".table__body--js"));
+  tableQuery = tableQuery[0];
+  let table = Array.from(tableQuery.rows);
+  let ascOrDsc = false;
 
-const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
-    v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
-    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+  headers.forEach(th =>
+    th.addEventListener("click", () => {
+      ascOrDsc = !ascOrDsc;
+      const indexOfTh = Array.from(th.parentNode.children).indexOf(th);
+      Array.from(table)
+        .sort(comparer(indexOfTh, ascOrDsc))
+        .forEach(tr => tableQuery.appendChild(tr));
+    })
+  );
+})
 
-    */
