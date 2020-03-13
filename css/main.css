@@ -318,7 +318,14 @@ html {
 
 body {
   color: #000;
-  background: #fff; }
+  background: #fff;
+  min-height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
 
 .table {
   border-collapse: collapse; }
@@ -327,5 +334,17 @@ td, th {
   border: 1px solid #999;
   padding: 0.5rem;
   text-align: left; }
+
+.input__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 1rem; }
+
+.input__field, .input__label {
+  margin: 0.5rem; }
 
 /*# sourceMappingURL=main.css.map */
