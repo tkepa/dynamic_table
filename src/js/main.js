@@ -132,21 +132,59 @@ const comparer = (columnIndex, sortAscending) => (a, b) => {
   return v1 - v2;
 };
 
+const checkValue = (text) => (rows) => {
+  return Array.from(rows.children).some( (row) => {
+    const fieldValue = row.innerText.toLowerCase();
+    return (fieldValue.substring(0, text.length) === text);
+  });
+};
+    
+
+
 renderTable().then( () => {
+
+  //Sorting table
+
   const headers = Array.from(document.querySelectorAll(".header"));
-  let tableQuery = Array.from(document.querySelectorAll(".table__body--js"));
-  tableQuery = tableQuery[0];
-  let table = Array.from(tableQuery.rows);
+  const wholeTable = document.querySelector("table");
+  const tableQuery = wholeTable.querySelector(".table__body--js");
+  const tableRows = Array.from(wholeTable.querySelector("tbody").rows);
+
   let ascOrDsc = false;
 
   headers.forEach(th =>
-    th.addEventListener("click", () => {
+    th.addEventListener("click", e => {
       ascOrDsc = !ascOrDsc;
       const indexOfTh = Array.from(th.parentNode.children).indexOf(th);
-      Array.from(table)
+      tableRows
         .sort(comparer(indexOfTh, ascOrDsc))
         .forEach(tr => tableQuery.appendChild(tr));
     })
   );
+
+  //Search in table
+  
+  const inputQuery = document.querySelector(".input__field--js");
+  
+  
+  
+
+  inputQuery.addEventListener("keyup", e => {
+    const text = inputQuery.value.toLowerCase();
+    const tableQ = wholeTable.querySelector("tbody");
+    const tableBody = document.createElement('tbody');
+    console.log(text);
+    tableRows.filter(checkValue(text)).forEach(row => {
+      tableBody.appendChild(row);
+    });
+    
+    
+
+    
+    wholeTable.replaceChild(tableBody, tableQ);
+    
+    
+  })
+  
 })
 
