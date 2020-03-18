@@ -38,16 +38,28 @@
         <label class="input__label" for="search">Search in Table</label>
         <input class="input__field input__field--js" type="text" id="search" placeholder="type text here">
       </div>
-
+      <div class="buttons__container">
+        <div class="sort__header">
+          <h2>Sort by:</h2>
+        </div>
+        <div class="buttons__container--sort">
+          <button class="button" value="0" type="button">ID</button>
+          <button class="button" value="1" type="button">Name</button>
+          <button class="button" value="2" type="button">City</button>
+          <button class="button" value="3" type="button">Total income</button>
+          <button class="button" value="4" type="button">Average income</button>
+          <button class="button" value="5" type="button">Last month income</button> 
+        </div>
+      </div>
       <table class="table">
-        <thead>
-          <tr>
-            <th class="header">ID</th>
-            <th class="header">Name</th>
-            <th class="header">City</th>
-            <th class="header">Total income</th>
-            <th class="header">Average income</th>
-            <th class="header">Last month income</th>
+        <thead class="tableHeader"> 
+          <tr class="tableHeader__row">
+            <th class="tableHeader__cell">ID</th>
+            <th class="tableHeader__cell">Name</th>
+            <th class="tableHeader__cell">City</th>
+            <th class="tableHeader__cell">Total income</th>
+            <th class="tableHeader__cell">Average income</th>
+            <th class="tableHeader__cell">Last month income</th>
           </tr>
         </thead>
         <tbody class="table__body table__body--js">

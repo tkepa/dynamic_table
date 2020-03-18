@@ -63,9 +63,9 @@ async function companny (comp, companiesArray) {
   companyIncomes = companyIncomes.incomes;
   const companyIncome = companyIncomes.map(comp => parseFloat(comp.value));
 
-  const total = "" + Number(totalIncome(companyIncome)).toFixed(2);
-  const average = "" + Number(total/(companyIncome.length + 1)).toFixed(2);
-  const monthIncome = "" + Number(lastMonthIncomes(companyIncomes)).toFixed(2);
+  const total = Number(totalIncome(companyIncome)).toFixed(2);
+  const average = Number(total/(companyIncome.length + 1)).toFixed(2);
+  const monthIncome = Number(lastMonthIncomes(companyIncomes)).toFixed(2);
 
   const companyObj = {
     ...comp, 
@@ -101,13 +101,13 @@ async function renderTable() {
   for (const company of companiesList) {
     const {id, name, city, totalIncome, averageIncome, monthIncome} = company;
     tableInnerHtml += `
-       <tr>
-          <td>${id}</td>
-          <td>${name}</td>
-          <td>${city}</td>
-          <td>${totalIncome}</td>
-          <td>${averageIncome}</td>
-          <td>${monthIncome}</td>
+       <tr class="tableRow">
+          <td class="tableRow__cell">${id}</td>
+          <td class="tableRow__cell">${name}</td>
+          <td class="tableRow__cell">${city}</td>
+          <td class="tableRow__cell">${totalIncome}</td>
+          <td class="tableRow__cell">${averageIncome}</td>
+          <td class="tableRow__cell">${monthIncome}</td>
         </tr>
       `;
   }
@@ -161,12 +161,13 @@ renderTable().then( () => {
 
   //Sorting table
 
-  const headers = Array.from(document.querySelectorAll(".header"));
+  const headers = Array.from(document.querySelectorAll(".tableHeader__cell"));
   const wholeTable = document.querySelector("table");
   const tableRows = Array.from(wholeTable.querySelector("tbody").rows);
   let check = false;
   let ascOrDsc = false;
-
+  let checkSorting = false;
+  
   headers.forEach(th =>
     th.addEventListener("click", e => {
       const tableRows = Array.from(wholeTable.querySelector("tbody").rows);
@@ -174,9 +175,46 @@ renderTable().then( () => {
       const indexOfTh = Array.from(th.parentNode.children).indexOf(th);
       const sort = bodyManager();
       sort(tableRows
-        .sort(comparer(indexOfTh, ascOrDsc)));
+        .sort(comparer(indexOfTh, ascOrDsc))
+        );
+
+      if (!checkSorting) {
+        th.classList.remove("headerSortDown");
+        th.classList.add("headerSortUp");
+        checkSorting = true;
+      }
+      else {
+        th.classList.remove("headerSortUp");
+        th.classList.add("headerSortDown");
+        checkSorting = false;
+      }
     })
   );
+
+  const buttons = Array.from(document.querySelectorAll(".button"));
+  
+  buttons.forEach(button => 
+    button.addEventListener('click', e => {
+      const tableRows = Array.from(wholeTable.querySelector("tbody").rows);
+      ascOrDsc = !ascOrDsc;
+      const indexOfTh = Number(button.value);
+      const sort = bodyManager();
+      sort(tableRows
+        .sort(comparer(indexOfTh, ascOrDsc))
+        );
+
+      if (!checkSorting) {
+        button.classList.remove("headerSortDown");
+        button.classList.add("headerSortUp");
+        checkSorting = true;
+      }
+      else {
+        button.classList.remove("headerSortUp");
+        button.classList.add("headerSortDown");
+        checkSorting = false;
+      }
+    }))
+
 
   //Search in table
   

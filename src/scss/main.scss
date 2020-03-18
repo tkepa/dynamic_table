@@ -2,6 +2,14 @@
 @import "_variables";
 
 
+@mixin column($headers...) {
+	@for $i from 0 to length($headers) {
+		&:nth-of-type(#{$i + 1}):before {
+			content: nth($headers, $i+1);
+		}
+	}
+}
+
 html {
   box-sizing: border-box;
   font-size: 16px;
@@ -17,6 +25,7 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  font-family: $font;
   
 }
 
@@ -24,10 +33,54 @@ body {
   border-collapse: collapse;
 }
 
-td, th {
+.tableHeader__cell, .tableRow__cell {
   border: 1px solid #999;
   padding: 0.5rem;
   text-align: left;
+}
+
+.tableHeader__row {
+	background-color: wheat;
+}
+
+.headerSortDown:after,
+.headerSortUp:after{
+    content: ' ';
+    position: relative;
+    left: 10px;
+    border: 7px solid transparent;
+}
+.headerSortDown:after{
+    top: 10px;
+    border-top-color: silver;
+}
+.headerSortUp:after{
+    bottom: 15px;
+    border-bottom-color: silver;
+}
+.headerSortDown{
+	padding-left: 10px;
+	&:after {
+		content: ' ';
+		position: relative;
+		left: 10px;
+		border: 7px solid transparent;
+		top: 15px;
+		border-top-color: red;
+		margin-right: 10px;
+	}
+}
+.headerSortUp{
+	padding-left: 10px;
+	&:after {
+		content: ' ';
+		position: relative;
+		left: 10px;
+		border: 7px solid transparent;
+		bottom: 15px;
+		border-bottom-color: green;
+		margin-right: 10px;
+	}
 }
 
 .input__container {
@@ -39,3 +92,98 @@ td, th {
 .input__field, .input__label {
   margin: 0.5rem;
 }
+.buttons__container {
+	display: none;
+}
+
+@media
+only screen 
+and (max-width: 760px), (min-device-width: 768px) 
+and (max-device-width: 1024px)  {
+
+  /* Force table to not be like tables anymore */
+  	table, thead, tbody, th, td, tr {
+	  	display: block;
+  	}
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+	.tableHeader .tableHeader__row {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+  	}
+
+	.tableRow {
+		border: 1px solid #ccc;
+		margin: 0.5rem;
+
+		&__cell {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			padding-left: 50%;
+
+			
+			&:before {
+					/* Now like a table header */
+				position: absolute;
+				/* Top/left values mimic padding */
+				vertical-align: middle;
+				left: 6px;
+				width: 45%;
+				padding-right: 10px;
+				white-space: nowrap;
+				font-weight: bold;
+			}
+
+			@include column("ID", "Name", "City", "Total Income", "Average Income", "Last Month Income");
+
+		}
+	}
+
+	.buttons__container {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		margin: 1rem;
+
+		&--sort {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+		}
+	}
+	
+	.button {
+		margin: 0.2rem;
+		min-width: 40px;
+		min-height: 30px;
+		border: none;
+		border-radius: 10px;
+		padding: 10px;
+		transition: background-color .3 ease-in-out, color .3 ease-in-out;
+		&:hover {
+			background-color: purple;
+			color: #fff;
+		}
+	}
+
+}
+		
+		
+
+
+
+
+
+  /*
+  Label the data
+You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+  */
+ 
+  /*
+  Label the data
+You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+  */
+
