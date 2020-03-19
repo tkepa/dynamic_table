@@ -419,7 +419,12 @@ body {
       border: none;
       border-bottom: 1px solid #eee;
       position: relative;
-      padding-left: 50%; }
+      padding-left: 55%;
+      background: wheat;
+      background: -webkit-gradient(linear, left top, right top, color-stop(50%, wheat), color-stop(50%, white));
+      background: -webkit-linear-gradient(left, wheat 50%, white 50%);
+      background: -o-linear-gradient(left, wheat 50%, white 50%);
+      background: linear-gradient(90deg, wheat 50%, white 50%); }
       .tableRow__cell:before {
         /* Now like a table header */
         position: absolute;
