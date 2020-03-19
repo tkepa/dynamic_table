@@ -1,9 +1,19 @@
-# wtf-gulp-starter
+# Dynamic Table Project
 
-`npm install -g gulp-cli`
+![Table](https://raw.githubusercontent.com/shzgfx/dynamic_table/master/src/assets/img/cover.png)
 
-`npm install`
+## 1. About project
+I've decided to create table which contains data from API using only html, css and JavaScript.
 
-`gulp`
+## 2. Features
+  * Download data from API and then render table.
+  * Sorting data ascending and descending by clicking on table header.
+  * Searching data by typed text.
+  * Works on Mobile!
 
-To publish your page using github pages use `npm run deploy`
+## 3. Mobile preview
+![Mobile table](https://raw.githubusercontent.com/shzgfx/dynamic_table/master/src/assets/img/mobile.PNG)
+
+## 4. Test it!
+  [DEMO](https://shzgfx.github.io/dynamic_table/)
+  
