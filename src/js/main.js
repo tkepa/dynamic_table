@@ -157,6 +157,15 @@ const bodyManager = function getRows() {
   }
 }
 
+function classRemove(arr, indexOfTh) {
+  arr.splice(indexOfTh, 1)
+      
+  arr.forEach( th => {
+    th.classList.remove("headerSortDown")
+    th.classList.remove("headerSortUp");
+  })
+}
+
 renderTable().then( () => {
 
   //Sorting table
@@ -177,7 +186,11 @@ renderTable().then( () => {
       sort(tableRows
         .sort(comparer(indexOfTh, ascOrDsc))
         );
-
+      
+      const tableHead = [...headers]; 
+      
+      classRemove(tableHead, indexOfTh);
+      
       if (!checkSorting) {
         th.classList.remove("headerSortDown");
         th.classList.add("headerSortUp");
@@ -188,6 +201,7 @@ renderTable().then( () => {
         th.classList.add("headerSortDown");
         checkSorting = false;
       }
+    
     })
   );
 
@@ -202,6 +216,10 @@ renderTable().then( () => {
       sort(tableRows
         .sort(comparer(indexOfTh, ascOrDsc))
         );
+
+      const tableHead = [...buttons]; 
+      
+      classRemove(tableHead, indexOfTh);
 
       if (!checkSorting) {
         button.classList.remove("headerSortDown");

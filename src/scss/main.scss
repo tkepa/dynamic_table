@@ -133,7 +133,9 @@ and (max-device-width: 1024px)  {
 			border: none;
 			border-bottom: 1px solid #eee;
 			position: relative;
-			padding-left: 50%;
+			padding-left: 55%;
+			background: rgba(245,222,179,1);
+			background: linear-gradient(90deg, rgba(245,222,179,1) 50%, rgba(255,255,255,1) 50%);
 
 			
 			&:before {
@@ -146,6 +148,7 @@ and (max-device-width: 1024px)  {
 				padding-right: 10px;
 				white-space: nowrap;
 				font-weight: bold;
+				
 			}
 
 			@include column("ID", "Name", "City", "Total Income", "Average Income", "Last Month Income");
